@@ -1,5 +1,5 @@
 # git branch
-BRANCH := master
+BRANCH := main
 # default commit message
 MESSAGE := Automatically committed
 
