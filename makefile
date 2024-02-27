@@ -9,7 +9,7 @@ MDC := pandoc
 DMC := \#
 
 # Markdown flags
-MDFLAGS := 
+MDFLAGS := --standalone --css=css/markdown/main.css
 # DocMark flags
 DMFLAGS := 
 
@@ -18,14 +18,6 @@ MD_SRC := markdown/
 DM_SRC := docmark/
 MD_BLD := compiled_markdown/
 DM_BLD := compiled_docmark/
-
-# source files
-MD_SOURCES := $(wildcard $(MD_SRC)*.md)
-DM_SOURCES := $(wildcard $(DM_SRC)*.dm)
-
-# compiled files
-MD_COMPILED := $(subst md,html,$(subst $(MD_SRC),$(MD_BLD),$(MD_SOURCES)))
-DM_COMPILED := $(subst dm,html,$(subst $(DM_SRC),$(DM_BLD),$(DM_SOURCES)))
 
 # compile Markdown sources
 COMPILE.md = $(MDC) $(MDFLAGS) -o $@ $<
@@ -46,10 +38,10 @@ filestructure:
 	mkdir -p $(DM_SRC)
 	mkdir -p $(DM_BLD)
 
-$(MD_COMPILED): $(MD_SOURCES)
+$(MD_BLD)%.html: $(MD_SRC)%.md
 	$(COMPILE.md)
 
-$(DM_COMPILED): $(DM_SRC) $(DM_BLD) $(DM_SOURCES)
+$(DM_BLD)%.html: $(DM_SRC)%.dm
 	$(COMPILE.dm)
 
 # force rebuild
@@ -61,8 +53,8 @@ remake:
 # remove previous build
 .PHONY: clean
 clean:
-	$(RM) $(MD_COMPILED)
-	$(RM) $(DM_COMPILED)
+	$(RM) $(wildcard $(MD_BLD)*.html)
+	$(RM) $(wildcard $(DM_BLD)*.html)
 
 # push changes to repository
 .PHONY: commit
